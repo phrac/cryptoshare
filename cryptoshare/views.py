@@ -18,7 +18,7 @@ def index(request):
             msg = form.cleaned_data['message']
             key = form.cleaned_data['key']
             doc = Document()
-            doc.ciphertext = doc.encrypt(msg, key)
+            doc.ciphertext, doc.salt = doc.encrypt(msg, key)
             doc.save()
 
             url = base62_converter.dehydrate(doc.id)
