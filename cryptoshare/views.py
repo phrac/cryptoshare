@@ -33,7 +33,6 @@ def index(request):
 
 def viewmsg(request, base_62):
     key = request.POST.get('key', None)
-    print key
     id = base62_converter.saturate(base_62)
     doc = Document.objects.get(id=id)
 
