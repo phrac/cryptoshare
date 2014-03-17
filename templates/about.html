@@ -12,9 +12,40 @@
                 <p>CryptoShare is a simple message encryption system for sending
                 and receiving messages and documents using strong encryption.
                 </p>
+                <h3>How are messages stored and encrypted?</h3>
+                <p class="text-justify">
+                Your message and key are sent in to the server via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL/TLS</a>. 
+                The server then generates a salted <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an 
+                <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a> from the server's 
+                <code><a href="http://en.wikipedia.org/wiki//dev/urandom">/dev/urandom</a></code> device. Your message is then padded to the correct length using a <a href="http://en.wikipedia.org/wiki/PKCS7">PKCS7</a> algorithm. Finally, 
+                the server encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. 
+                After encrypting, the IV is prepended to the encrypted message, <a href="http://en.wikipedia.org/wiki/Base64">base64</a> encoded, 
+                and stored in the database. <strong>Your key is then discarded.</strong> No identifying information about you or your message is stored. All
+                server log messages are sent to <code><a href="http://en.wikipedia.org/wiki//dev/null">/dev/null</a></code>.
+                </p>
+                
+                <p>
+                The encryption function is as follows (python):
+                </p>
+                <pre>
+def encrypt(self, raw, ukey):
+    pad = PKCS7Encoder()                                # Initialize PKCS7 Encoder
+    key = hashlib.sha256(ukey+SALT).digest()            # hash key with SHA256
+    iv = os.urandom(16)                                 # Get 16 bytes from urandom
+    msg = pad.encode(raw)                               # pad the message (% 16 == 0)
+    cipher = AES.new(key, AES.MODE_CBC, iv)             # create an encryption object
+    return base64.b64encode(iv + cipher.encrypt(msg))   # encrypt, encode, return
+                </pre>
+
+                <h3>I lost my key, can you help me?</h3>
+                <p>
+                Sorry, no. We do not store your key anywhere. If you lost your key, your message is useless (short of <a href="http://en.wikipedia.org/wiki/Brute-force_attack">bruteforcing</a>).
+                </p>
+
                 </div><!-- /col-lg-8 -->
         </div><!-- /row -->
     </div> <!-- /container -->
 </div><!-- /ww -->
+</div>
 
 {% endblock %}
