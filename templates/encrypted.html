@@ -5,10 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-
-                
                 <div class="centered">
-                
                     <h4>This message URL:<h4>
                     <input style="text-align:center" type="text" value="http://1mg.in/{{ url }}" />
                 </div>
@@ -30,24 +27,21 @@
 
                 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
                 <script>
-$(document).ready(function() {
-        $("#decrypt-form").submit(function() {
+                    $("#decrypt-form").submit(function() {
 
-            var url = "/{{ url }}"; // the script where you handle the form input.
+                        var url = "/{{ url }}"; // the script where you handle the form input.
 
-            $.ajax({
-type: "POST",
-url: url,
-data: $("#decrypt-form").serialize(), // serializes the form's elements.
-success: function(data)
-{
-$('#plaintext').hide().html(data).fadeIn("slow"); // show response from the php script.
-}
-});
-
-            return false; // avoid to execute the actual submit of the form.
-            });
-        });
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $("#decrypt-form").serialize(),
+                            success: function(data)
+                            {
+                                $('#plaintext').hide().html(data).fadeIn("slow");
+                            }
+                            return false;
+                        });
+                    });
                 </script>
             </div><!-- /col-lg-8 -->
         </div><!-- /row -->

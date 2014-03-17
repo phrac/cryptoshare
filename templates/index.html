@@ -42,14 +42,9 @@
                 <hr>
                 <h4>How are my messages stored and encrypted?</h5>
                 <p class="text-justify">
-                Your message and key are sent in plaintext to the server (via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL</a>). The
-                server then generates a <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a>
-                from the server's <code>/dev/urandom</code> device. Your
-                message is then padded to the correct length using a PKCS7 algorithm. Finally, the server 
-                encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. After encrypting, the
-                IV is prepended to the encrypted message, <a href="http://en.wikipedia.org/wiki/Base64">base64</a> encoded, and stored in the database. <strong>Your
-                    key is then discarded.</strong>
+                Your message and key are sent in plaintext to the server (via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL</a>). The server then generates a <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a> from the server's <code>/dev/urandom</code> device. Your message is then padded to the correct length using a PKCS7 algorithm. Finally, the server encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. After encrypting, the IV is prepended to the encrypted message, <a href="http://en.wikipedia.org/wiki/Base64">base64</a> encoded, and stored in the database. <strong>Your key is then discarded.</strong>
                 </p>
+                
                 <p>
                 The encryption function is as follows (python):
                 <pre>
