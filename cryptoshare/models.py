@@ -8,7 +8,7 @@ from cryptoshare.pkcs7 import PKCS7Encoder
 
 class Document(models.Model):
     ciphertext = models.TextField()
-    salt = models.CharField(max_length=256)
+    salt = models.CharField(max_length=64)
     created = models.DateTimeField(auto_now_add=True)
     views = models.IntegerField(default=0)
 

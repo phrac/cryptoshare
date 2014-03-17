@@ -2,6 +2,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 
+from ratelimit.decorators import ratelimit
+
 from cryptoshare.forms import RawMessageForm, DecodeForm
 from cryptoshare.models import Document
 
@@ -30,7 +32,7 @@ def index(request):
 
     return render(request, 'index.html', {'form': form})
 
-
+@ratelimit(ip=True, block=True, rate='5/m')
 def viewmsg(request, base_62):
     try:
         id = base62_converter.saturate(base_62)
