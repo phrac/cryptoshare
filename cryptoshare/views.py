@@ -44,6 +44,8 @@ def viewmsg(request, base_62):
         if form.is_valid():
             key = form.cleaned_data['key']
             plaintext = doc.decrypt(key)
+    else:
+        form = DecodeForm(None)
 
     if request.is_ajax():
         return HttpResponse(plaintext)
@@ -54,4 +56,5 @@ def viewmsg(request, base_62):
                       'document': doc,
                       'plaintext': plaintext,
                       'url' : base_62,
+                      'form': form,
                   })

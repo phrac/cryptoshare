@@ -19,9 +19,17 @@
 {{ document.ciphertext }}
 {% endif %}
                 </pre>
-                <form id="decrypt-form" method="post" class="centered">
+                <form id="decrypt-form" method="post" class="form-inline centered">
                     {% csrf_token %}
-                    Key: <input type="password" name="key" id="key" />
+                    {% for field in form %}
+                    <label for="id_key">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <span class="help-block">
+                    {{ field.errors }}
+                    </span>
+                    {% endif %}
+                    {% endfor %}
                     <button>Decrypt</button>
                 </form>
 
