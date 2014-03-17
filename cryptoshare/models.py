@@ -26,10 +26,3 @@ class Document(models.Model):
         cipher = AES.new(key, AES.MODE_CBC, iv)
         return unpad.decode((cipher.decrypt(msg[16:])))
 
-    def getIV(self):
-        msg = base64.b64decode(self.ciphertext)
-        iv = msg[:16]
-        print iv
-        return iv
-
-
