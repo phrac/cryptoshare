@@ -8,6 +8,8 @@ from cryptoshare.pkcs7 import PKCS7Encoder
 
 class Document(models.Model):
     ciphertext = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    views = models.IntegerField(default=0)
 
     def encrypt(self, raw, ukey):
         pad = PKCS7Encoder()
@@ -26,6 +28,8 @@ class Document(models.Model):
         cipher = AES.new(key, AES.MODE_CBC, iv)
         try:
             txt = unpad.decode((cipher.decrypt(msg[16:])))
+            self.views += 1
+            self.save()
         except:
             txt = "Incorrect Key"
         return txt

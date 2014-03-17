@@ -25,9 +25,9 @@
                     <label for="id_key">{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
-                    <span class="help-block">
-                    {{ field.errors }}
-                    </span>
+                    {% for error in form.key.errors %}
+                        <span class="help-block"><strong>{{ error|escape }}</strong></span>
+                        {% endfor %}
                     {% endif %}
                     {% endfor %}
                     <button>Decrypt</button>
