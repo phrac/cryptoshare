@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 
-from cryptoshare.forms import RawMessageForm
+from cryptoshare.forms import RawMessageForm, DecodeForm
 from cryptoshare.models import Document
 
 import base62_converter
@@ -32,14 +32,18 @@ def index(request):
 
 
 def viewmsg(request, base_62):
-    key = request.POST.get('key', None)
-    id = base62_converter.saturate(base_62)
-    doc = Document.objects.get(id=id)
-
-    if key is not None:
-        plaintext = doc.decrypt(key)
-    else:
-        plaintext = None
+    try:
+        id = base62_converter.saturate(base_62)
+    except:
+        return Http404
+    doc = get_object_or_404(Document, pk=id)
+    plaintext = None
+    
+    if request.method == 'POST':
+        form = DecodeForm(request.POST)
+        if form.is_valid():
+            key = form.cleaned_data['key']
+            plaintext = doc.decrypt(key)
 
     if request.is_ajax():
         return HttpResponse(plaintext)

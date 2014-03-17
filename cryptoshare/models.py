@@ -24,5 +24,10 @@ class Document(models.Model):
         iv = msg[:16]
         key = hashlib.sha256(ukey).digest()
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        return unpad.decode((cipher.decrypt(msg[16:])))
+        try:
+            txt = unpad.decode((cipher.decrypt(msg[16:])))
+        except:
+            txt = "Incorrect Key"
+        return txt
+        
 

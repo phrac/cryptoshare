@@ -15,3 +15,6 @@ class RawMessageForm(forms.Form):
             raise forms.ValidationError("Keys don't match")
 
         return self.cleaned_data
+        
+class DecodeForm(forms.Form):
+    key = forms.CharField(max_length=256, widget=forms.PasswordInput, label="Key")
