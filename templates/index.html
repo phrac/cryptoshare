@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="ww">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Encrypt a message</h2>
+                <p>Use <strong>CryptoShare</strong> to create short messages for a friend in a secure manner. These
+                messages are encrypted with your key. For your friend to decrypt them, she will need the URL and the key.</p>
+                <hr>
+                <form role="form" class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="col-sm-3">{{ field.label }}</label>
+                        <div class="col-sm-8">
+                            {{ field }}
+                            {% if field.errors %}
+                            <span class="help-block">
+                                {{ field.errors }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    <div class="col-sm-offset-3 col-sm-8">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-8">
+                            <button type="submit" class="btn btn-default">Encrypt</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <hr>
+                <h4>How are my messages stored and encrypted?</h5>
+                <p class="text-justify">
+                Your message and key are sent in plaintext to the server (via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL</a>). The
+                server then generates a <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a>
+                from the server's <code>/dev/urandom</code> device. Your
+                message is then padded to the correct length using a PKCS7 algorithm. Finally, the server 
+                encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. After encrypting, the
+                IV is prepended to the encrypted message, <a href="http://en.wikipedia.org/wiki/Base64">base64</a> encoded, and stored in the database. <strong>Your
+                    key is then discarded.</strong>
+                </p>
+                <p>
+                The encryption function is as follows (python):
+                <pre>
+def encrypt(self, raw, ukey):
+    pad = PKCS7Encoder()                                # Initialize PKCS7 Encoder
+    key = hashlib.sha256(ukey).digest()                 # hash key with SHA256
+    iv = os.urandom(16)                                 # Get 16 bytes from urandom
+    msg = pad.encode(raw)                               # pad the message (% 16 == 0)
+    cipher = AES.new(key, AES.MODE_CBC, iv)             # create an encryption object
+    return base64.b64encode(iv + cipher.encrypt(msg))   # encrypt, encode, return
+                </pre>
+
+            </div><!-- /col-lg-8 -->
+        </div><!-- /row -->
+    </div> <!-- /container -->
+</div><!-- /ww -->
+{% endblock %}
