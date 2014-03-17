@@ -43,7 +43,7 @@
                 <h4>How are my messages stored and encrypted?</h5>
                 <p class="text-justify">
                 Your message and key are sent in to the server via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL/TLS</a>. 
-                The server then generates a <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an 
+                The server then generates a salted <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an 
                 <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a> from the server's 
                 <code>/dev/urandom</code> device. Your message is then padded to the correct length using a PKCS7 algorithm. Finally, 
                 the server encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. 
@@ -57,7 +57,7 @@
                 <pre>
 def encrypt(self, raw, ukey):
     pad = PKCS7Encoder()                                # Initialize PKCS7 Encoder
-    key = hashlib.sha256(ukey).digest()                 # hash key with SHA256
+    key = hashlib.sha256(ukey+SALT).digest()            # hash key with SHA256
     iv = os.urandom(16)                                 # Get 16 bytes from urandom
     msg = pad.encode(raw)                               # pad the message (% 16 == 0)
     cipher = AES.new(key, AES.MODE_CBC, iv)             # create an encryption object

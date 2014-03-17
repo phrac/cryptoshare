@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 import hashlib
 from Crypto.Cipher import AES
@@ -13,7 +14,7 @@ class Document(models.Model):
 
     def encrypt(self, raw, ukey):
         pad = PKCS7Encoder()
-        key = hashlib.sha256(ukey).digest()
+        key = hashlib.sha256(ukey+settings.SECRET_KEY).digest()
         iv = os.urandom(16)
         msg = pad.encode(raw)
         cipher = AES.new(key, AES.MODE_CBC, iv)
@@ -24,7 +25,7 @@ class Document(models.Model):
         unpad = PKCS7Encoder()
         msg = base64.b64decode(self.ciphertext)
         iv = msg[:16]
-        key = hashlib.sha256(ukey).digest()
+        key = hashlib.sha256(ukey+settings.SECRET_KEY).digest()
         cipher = AES.new(key, AES.MODE_CBC, iv)
         try:
             txt = unpad.decode((cipher.decrypt(msg[16:])))
