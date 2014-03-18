@@ -15,12 +15,12 @@
                 <h3>How are messages stored and encrypted?</h3>
                 <p class="text-justify">
                 Your message and key are sent in to the server via <a href="http://en.wikipedia.org/wiki/Transport_Layer_Security">SSL/TLS</a>. 
-                The server then generates a salted <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash of your key, and generates an 
+                The server then salts the key and creates a <a href="http://en.wikipedia.org/wiki/Sha256">SHA256</a> hash. Next, the server generates an 
                 <a href="http://en.wikipedia.org/wiki/Initialization_vector">initilization vector (IV)</a> from the server's 
                 <code><a href="http://en.wikipedia.org/wiki//dev/urandom">/dev/urandom</a></code> device. Your message is then padded to the correct length using a <a href="http://en.wikipedia.org/wiki/PKCS7">PKCS7</a> algorithm. Finally, 
                 the server encrypts your message with your key using <a href="http://en.wikipedia.org/wiki/Aes_256">AES 256</a> CBC block mode. 
                 After encrypting, the IV is prepended to the encrypted message, <a href="http://en.wikipedia.org/wiki/Base64">base64</a> encoded, 
-                and stored in the database. <strong>Your key is then discarded.</strong> No identifying information about you or your message is stored. All
+                and stored in the database along with the salt. <strong>Your key is then discarded.</strong> No identifying information about you or your message is stored. All
                 server log messages are sent to <code><a href="http://en.wikipedia.org/wiki//dev/null">/dev/null</a></code>.
                 </p>
                 
