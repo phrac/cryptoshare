@@ -14,7 +14,7 @@ class Document(models.Model):
 
     def encrypt(self, raw, ukey):
         pad = PKCS7Encoder()
-        salt = base64.b64encode(os.urandom(32))
+        salt = os.urandom(32).encode('base_64')
         key = hashlib.sha256(ukey+salt).digest()
         iv = os.urandom(16)
         msg = pad.encode(raw)
